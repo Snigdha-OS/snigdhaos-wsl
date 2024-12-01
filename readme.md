@@ -9,13 +9,13 @@ Credit:
 
 Welcome to the **Snigdha OS WSL** repository! This project provides the tools and configuration needed to build and distribute Snigdha OS for the Windows Subsystem for Linux (WSL).  
 
----
+
 
 ## 📖 What is Snigdha OS WSL?
 
 Snigdha OS WSL enables users to run Snigdha OS seamlessly within Windows using WSL. With this, you can enjoy the power of Snigdha OS without leaving the comfort of your Windows environment.
 
----
+
 
 ## 🚀 Features  
 
@@ -23,7 +23,7 @@ Snigdha OS WSL enables users to run Snigdha OS seamlessly within Windows using W
 - **Customizable**: Modify and enhance the WSL distribution to fit your needs.  
 - **Seamless Integration**: Access Snigdha OS utilities alongside Windows tools.  
 
----
+
 
 ## 📂 Repository Structure  
 
@@ -39,7 +39,7 @@ Snigdha OS WSL enables users to run Snigdha OS seamlessly within Windows using W
 - **`docs/`**  
   Documentation and guides related to Snigdha OS WSL.  
 
----
+
 
 ## 🔧 How to Use  
 
@@ -74,7 +74,7 @@ Start Snigdha OS by running:
 wsl -d SnigdhaOS
 ```
 
----
+
 
 ## 🤝 Contributing  
 
@@ -86,19 +86,19 @@ We welcome contributions from the community! To get started:
 
 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
----
+
 
 ## 🛠️ Issues  
 
 Found a bug or have a feature request? Open an issue [here](https://github.com/snigdha-os/snigdhaos-wsl/issues).  
 
----
+
 
 ## 📄 License  
 
 This project is licensed under the [MIT License](LICENSE).  
 
----
+
 
 ## 🌟 Join the Community  
 
@@ -106,6 +106,6 @@ This project is licensed under the [MIT License](LICENSE).
 - **Open Collective**: [Support Us](https://opencollective.com/snigdha-os)  
 - **Forums**: [Community Discussions](https://community.snigdha-os.org)  
 
----
+
 
 Thank you for choosing Snigdha OS for WSL! 🐧✨
