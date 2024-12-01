@@ -482,7 +482,8 @@ function start-client-win() {
         unset PASSWD
     else
         SCREEN=":1"
-        local PASSWD="-passwd ${HOME}/.config/tigervnc/passwd"
+        # local PASSWD="-passwd ${HOME}/.config/tigervnc/passwd"
+        local PASSWD="-passwd ${HOME}/.vnc/passwd"
     fi
 
     if [ -z ${MULTISCREEN} ]; then
@@ -497,7 +498,8 @@ function start-client-win() {
     # Let's work around it by starting Win-KeX from the rootfs
     cd ~
     print-verbose "Running Win-KeX client (Win)"
-    ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -ReconnectOnError ${RECONN_ON_ERR} ${PASSWD} ${FULLSCREEN} 127.0.0.1${SCREEN} >/dev/null 2>&1 &
+    # ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -ReconnectOnError ${RECONN_ON_ERR} ${PASSWD} ${FULLSCREEN} 127.0.0.1${SCREEN} >/dev/null 2>&1 &
+    /init ${VNCCLIENT} ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -ReconnectOnError ${RECONN_ON_ERR} ${PASSWD} ${FULLSCREEN} 127.0.0.1${SCREEN} >/dev/null 2>&1 &
     result=$?
     if [ "${result}" != "0" ]; then
         print-verbose "${VNCCLIENT}: ${result}"
@@ -530,7 +532,8 @@ function start-client-esm() {
     fi
 
     cd ~
-    mstsc.exe .win-kex.rdp /v:${HOST}:3390 &
+    # mstsc.exe .win-kex.rdp /v:${HOST}:3390 &
+    /init /mn/c/Windows/system32/mstsc.exe mstsc.exe .win-kex.rdp /v:${HOST}:3390 &
     result=$?
     if [ "${result}" != "0" ]; then
         print-verbose "mstsc.exe: ${result}"
@@ -567,7 +570,8 @@ function start-client-wt() {
                 print-verbose "Multiscreen support requested"
                 local FULLSCREEN="FullScreen=0 FullScreenAllMonitors=0"
             fi
-            ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -passwd ${HOME}/.config/tigervnc/passwd ${FULLSCREEN} 127.0.0.1:1
+            # ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -passwd ${HOME}/.config/tigervnc/passwd ${FULLSCREEN} 127.0.0.1:1
+            ${VNCCLIENT} -SecurityTypes VeNCrypt,TLSVnc -passwd ${HOME}/.vnc/passwd ${FULLSCREEN} 127.0.0.1:1
         fi
         cd - >/dev/null 2>&1
         if ask "\n\tWin-KeX session disconnected\n\tWould you like to reconnect?" "Y"; then
@@ -607,14 +611,16 @@ function run-xfdesktop() {
 
 function start-client-sl() {
     printf 'Starting Win-KeX client (SL)\n'
-    if [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
-        sessions-kex-sl
-    fi
+    # if [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
+    #     sessions-kex-sl
+    # fi
+    sessions-kex-sl
     XFCE_DESKTOP_DISABLED="0"
     SESSION=${HOSTIP}:${XSERVSESSION}
-    if [ -z "$DISPLAY" ] || [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
-        export DISPLAY=${SESSION}.0
-    fi
+    # if [ -z "$DISPLAY" ] || [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
+    #     export DISPLAY=${SESSION}.0
+    # fi
+    export DISPLAY=${SESSION}.0
     export GDK_BACKEND=x11
 
     if [ "${NOWGL}" == "1" ]; then
@@ -629,18 +635,21 @@ function start-client-sl() {
         unset PULSE_SERVER
     else
         print-verbose "Sound support requested"
-        if [ -z "$PULSE_SERVER" ] || [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
-            export PULSE_SERVER=tcp:${HOSTIP}
-        fi
+        export PULSE_SERVER=tcp:${HOSTIP}
+        # if [ -z "$PULSE_SERVER" ] || [ "${USE_EXISTING_GUI_VARS}" != 1 ]; then
+        #     export PULSE_SERVER=tcp:${HOSTIP}
+        # fi
     fi
 
     ## Clean up stale sessions first
     print-verbose "Killing session"
-    pkill -ef "dbus-launch --exit-with-session xfce4-session" >/dev/null 2>&1
+    # pkill -ef "dbus-launch --exit-with-session xfce4-session" >/dev/null 2>&1
+    pkill -ef "exec xfce4-session" >/dev/null 2>&1
 
     ## Launch new Xfce session
     print-verbose "Starting session"
-    dbus-launch --exit-with-session xfce4-session >/dev/null 2>&1 &
+    # dbus-launch --exit-with-session xfce4-session >/dev/null 2>&1 &
+    exec xfce4-session >/dev/null 2>&1 &
 
     SESSION_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/sessions/xfce4-session-"
     SESSION_FILE="${SESSION_CACHE}${SESSION}"
@@ -680,7 +689,7 @@ function start-client-sl() {
             printf "\t${light_cyan}Waited ${i} seconds for xfDesktop (gave up)${reset}\n"
             printf "\tTry either:\n $0 --sl --wait [...]\n"
             printf "\t\t$0 --sl --wait [...]\n"
-            printf "\t\tInstall vcxsrv on the host outside of WSL: https://www.kali.org/docs/wsl/win-kex-sl/\n"
+            printf "\t\tInstall vcxsrv on the host outside of WSL: https://www.docs.snigdhaos.org/wsl/win-kex-sl/\n"
             if [ -n "${VERBOSE}" ]; then
                 printf '\n'
                 cat "${log}"
@@ -722,7 +731,8 @@ function kill-kex() {
 function start-sound() {
     print-verbose "Starting sound"
     cd /usr/lib/win-kex/pulse
-    ./pulseaudio.exe -F config.pa >/dev/null 2>&1 &
+    # ./pulseaudio.exe -F config.pa >/dev/null 2>&1 &
+    /init ./pulseaudio.exe pulseaudio.exe -F config.pa >/dev/null 2>&1 &
     cd - >/dev/null 2>&1
 }
 
@@ -730,7 +740,8 @@ function stop-sound() {
     print-verbose "Stopping sound"
     pkill -9 -f pulseaudio.exe
 }
-
+# Deleting wayland is necessary
+rm -rf /run/user/1000/wayland-0*
 unset mode
 unset cmd
 while [[ $# -gt 0 ]]; do
@@ -766,9 +777,9 @@ while [[ $# -gt 0 ]]; do
             SLTIMEOUT=300
             shift
             ;;
-        --use-existing-gui-vars)
-            USE_EXISTING_GUI_VARS=1
-            shift
+        # --use-existing-gui-vars)
+        #     USE_EXISTING_GUI_VARS=1
+        #     shift
             ;;
         # MODES:
         esm|--esm)
